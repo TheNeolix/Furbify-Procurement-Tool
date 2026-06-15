@@ -1,0 +1,6 @@
+{
+  "name": "Hardware Sales Forecasting Dashboard",
+  "description": "A high-performance single-page procurement and velocity forecasting dashboard applying the 70% cash flow validation rule to bulk hardware lots.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
