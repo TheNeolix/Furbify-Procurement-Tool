@@ -4,7 +4,7 @@ Furbify Procurement Tool (FPT) is a professional, high-performance web dashboard
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 * **Google Sheets Synchronization**: Connect a live Google Sheet containing hardware benchmarks (historical prices, sales velocity) to feed the simulation.
 * **Searchable Combobox Model Entry**: Type to search model names with full keyboard support (`ArrowUp`, `ArrowDown`, `Enter` to select, `Esc` to close) matching Excel-like native search UX.
@@ -16,7 +16,7 @@ Furbify Procurement Tool (FPT) is a professional, high-performance web dashboard
 
 ---
 
-## 🧮 Forecasting & Mathematical Logic
+## Forecasting & Mathematical Logic
 
 The forecasting engine simulates cash flows using historical velocity benchmarks. The calculations used by the application are structured as follows:
 
@@ -35,23 +35,23 @@ The forecasting engine simulates cash flows using historical velocity benchmarks
 
 ### 2. Core Formulas
 
-#### 📊 Daily Sales Rate (DSR)
+#### Daily Sales Rate (DSR)
 Calculates the average speed at which a model sells per day:
 $$R_i = \frac{U_{30,i}}{30}$$
 
-#### 📅 Capped 21-Day Sales
+#### Capped 21-Day Sales
 Calculates the number of units projected to sell during a standard 21-day window, capped by the actual quantity in the lot:
 $$S_{21,i} = \min\left(Q_i, \lfloor R_i \times 21 \rfloor\right)$$
 
-#### 💵 Unit Margin
+#### Unit Margin
 Calculates the gross margin per unit sold:
 $$M_i = P_i - C_i$$
 
-#### 📈 Projected 21-Day Profit (Per Line Item)
+#### Projected 21-Day Profit (Per Line Item)
 Calculates the total projected cash returns for a specific hardware spec line:
 $$\text{Profit}_{21,i} = S_{21,i} \times M_i$$
 
-#### 📦 Total Projected 21-Day Profit
+#### Total Projected 21-Day Profit
 The sum of projected profits across all items in the lot:
 $$\text{Profit}_{21,\text{total}} = \sum_i \text{Profit}_{21,i}$$
 
@@ -59,19 +59,19 @@ $$\text{Profit}_{21,\text{total}} = \sum_i \text{Profit}_{21,i}$$
 
 ### 3. Decision Rules & Risk Management
 
-#### 🛡️ Capital Recoup Target
+#### Capital Recoup Target
 The company requires that **at least 70% of the invested lot capital ($L$)** be recouped within the 21-day sales window to manage depreciation and inventory aging risks:
 $$\text{Recoup}_{\text{target}} = L \times 0.70$$
 
-#### 🚦 Purchase Verdict (GO / NO-GO)
+#### Purchase Verdict (GO / NO-GO)
 The deal is approved if the projected profits cover the 70% recoup target:
 $$\text{Verdict} = \begin{cases} \mathbf{GO} & \text{if } \text{Profit}_{21,\text{total}} \ge \text{Recoup}_{\text{target}} \\ \mathbf{NO\text{-}GO} & \text{if } \text{Profit}_{21,\text{total}} < \text{Recoup}_{\text{target}} \end{cases}$$
 
-#### 📉 Recoup Rate (%)
+#### Recoup Rate (%)
 The percentage of the recoup target covered by projected 21-day profits:
 $$\text{Recoup Rate (\%)} = \frac{\text{Profit}_{21,\text{total}}}{\text{Recoup}_{\text{target}}} \times 100$$
 
-#### ⚠️ Recoup Shortfall
+#### Recoup Shortfall
 If the deal is a **NO-GO**, the shortfall amount is computed as:
 $$\text{Shortfall} = \text{Recoup}_{\text{target}} - \text{Profit}_{21,\text{total}}$$
 
@@ -88,7 +88,7 @@ If a deal is rejected (**NO-GO**), the tool calculates how to make it viable:
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 * **Frontend**: React 19, TypeScript, Vite
 * **Styling**: Tailwind CSS v4, Vanilla CSS variables
@@ -98,7 +98,7 @@ If a deal is rejected (**NO-GO**), the tool calculates how to make it viable:
 
 ---
 
-## 💻 Local Development Setup
+## Local Development Setup
 
 ### Prerequisites
 * **Node.js** (v18 or higher recommended)
