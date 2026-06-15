@@ -1,6 +1,6 @@
 # Furbify Procurement Tool (FPT)
 
-Furbify Procurement Tool (FPT) is a professional, high-performance web dashboard designed for secondary-market hardware procurement teams. FPT enables procurement managers to evaluate mixed-lot hardware inventory purchases, run predictive cash flow simulations, and make data-driven, risk-adjusted buy decisions based on historical sales velocity and market benchmark values.
+Furbify Procurement Tool (FPT) is a professional, high-performance web dashboard designed for secondary-market hardware procurement team. FPT enables procurement specialists to evaluate mixed-lot hardware inventory purchases, run predictive cash flow simulations, and make data-driven, risk-adjusted buy decisions based on historical sales velocity and market benchmark values.
 
 ---
 
