@@ -64,33 +64,28 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
     }
   }
 
-  // Fetch the CSV as text, clean empty lines before the header row, and parse
-  const response = await fetch(parsedUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Google Sheet CSV: HTTP status ${response.status}`);
-  }
-  const csvText = await response.text();
-
-  // Find where the headers start by skipping any initial empty rows
-  const lines = csvText.split(/\r?\n/);
-  let headerLineIndex = 0;
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    // A row is considered empty if it contains only whitespace or delimiters
-    const isEmpty = line === "" || /^[,;\s\t]+$/.test(line);
-    if (!isEmpty) {
-      headerLineIndex = i;
-      break;
-    }
-  }
-  const cleanedCsvText = lines.slice(headerLineIndex).join("\n");
-
   return new Promise((resolve, reject) => {
-    Papa.parse(cleanedCsvText, {
+    Papa.parse(parsedUrl, {
+      download: true,
       header: true,
       skipEmptyLines: "greedy",
+      beforeFirstChunk: (chunk: string) => {
+        // Find where the headers start by skipping any initial empty rows
+        const lines = chunk.split(/\r?\n/);
+        let headerLineIndex = 0;
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          // A row is considered empty if it contains only whitespace or delimiters
+          const isEmpty = line === "" || /^[,;\s\t]+$/.test(line);
+          if (!isEmpty) {
+            headerLineIndex = i;
+            break;
+          }
+        }
+        return lines.slice(headerLineIndex).join("\n");
+      },
       error: (error: any) => {
-        reject(new Error(`Failed to parse CSV: ${error.message || error}`));
+        reject(new Error(`Failed to load or parse CSV: ${error.message || error}`));
       },
       complete: (results: any) => {
         const { data, meta } = results;
