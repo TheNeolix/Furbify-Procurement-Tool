@@ -75,8 +75,9 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
         let headerLineIndex = 0;
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i].trim();
-          // A row is considered empty if it contains only whitespace or delimiters
-          const isEmpty = line === "" || /^[,;\s\t]+$/.test(line);
+          // A row is considered empty if it contains only quotes, commas, semicolons, tabs, and whitespace
+          const cleanedLine = line.replace(/["',;\s\t]/g, "");
+          const isEmpty = cleanedLine === "";
           if (!isEmpty) {
             headerLineIndex = i;
             break;
@@ -100,29 +101,30 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
         const keyMap: { [key in keyof HardwareRecord]?: string } = {};
 
         headers.forEach((originalHeader: string) => {
+          const rawTrimmed = originalHeader.trim();
           const norm = normalizeHeader(originalHeader);
           
-          if (norm.includes("modelname") || norm === "model" || norm === "device" || norm === "laptop") {
+          if (rawTrimmed === "model_name" || norm.includes("modelname") || norm === "model" || norm === "device" || norm === "laptop") {
             keyMap.modelName = originalHeader;
-          } else if (norm === "ram" || norm === "memory" || norm.includes("ramsize")) {
+          } else if (rawTrimmed === "ram" || norm === "ram" || norm === "memory" || norm.includes("ramsize")) {
             keyMap.ram = originalHeader;
-          } else if (norm.includes("storage") || norm === "ssd" || norm === "hdd" || norm.includes("drive")) {
+          } else if (rawTrimmed === "storage" || norm.includes("storage") || norm === "ssd" || norm === "hdd" || norm.includes("drive")) {
             keyMap.storage = originalHeader;
-          } else if (norm.includes("historicalavgsellingprice") || norm.includes("historicalavgprice") || norm.includes("avgsellingprice") || norm.includes("sellingprice") || norm.includes("historicalprice") || norm === "price") {
+          } else if (rawTrimmed === "historical_avg_price" || norm.includes("historicalavgprice") || norm.includes("historicalavgsellingprice") || norm.includes("historicalprice") || norm === "price") {
             keyMap.historicalPrice = originalHeader;
-          } else if (norm.includes("unitssoldinlast30days") || norm.includes("unitssold30days") || norm.includes("unitssold30d") || norm.includes("soldinlast30days") || norm.includes("sold30") || norm.includes("sold30days") || norm.includes("velocity")) {
+          } else if (rawTrimmed === "units_sold_30d" || norm.includes("unitssold30d") || norm.includes("unitssold30days") || norm.includes("unitssoldinlast30days") || norm.includes("sold30") || norm.includes("velocity")) {
             keyMap.unitsSold30Days = originalHeader;
-          } else if (norm.includes("totali5variants") || norm.includes("total_i5_variants") || norm.includes("i5variants")) {
+          } else if (rawTrimmed === "total_i5_variants" || norm.includes("totali5variants") || norm.includes("i5variants")) {
             keyMap.totalI5Variants = originalHeader;
-          } else if (norm.includes("totali7variants") || norm.includes("total_i7_variants") || norm.includes("i7variants")) {
+          } else if (rawTrimmed === "total_i7_variants" || norm.includes("totali7variants") || norm.includes("i7variants")) {
             keyMap.totalI7Variants = originalHeader;
-          } else if (norm.includes("currentlyinstock") || norm.includes("currently_in_stock") || norm.includes("instock")) {
+          } else if (rawTrimmed === "currently_in_stock" || norm.includes("currentlyinstock") || norm.includes("instock")) {
             keyMap.currentlyInStock = originalHeader;
-          } else if (norm.includes("stocki5") || norm.includes("stock_i5")) {
+          } else if (rawTrimmed === "stock_i5" || norm.includes("stocki5")) {
             keyMap.stockI5 = originalHeader;
-          } else if (norm.includes("stocki7") || norm.includes("stock_i7")) {
+          } else if (rawTrimmed === "stock_i7" || norm.includes("stocki7")) {
             keyMap.stockI7 = originalHeader;
-          } else if (norm.includes("alreadyhere") || norm.includes("already_here")) {
+          } else if (rawTrimmed === "already_here" || norm.includes("alreadyhere")) {
             keyMap.alreadyHere = originalHeader;
           }
         });
