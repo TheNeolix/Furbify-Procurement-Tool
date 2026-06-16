@@ -67,105 +67,124 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
   return new Promise((resolve, reject) => {
     Papa.parse(parsedUrl, {
       download: true,
-      header: true,
+      header: false, // Parse as raw 2D array of rows first
       skipEmptyLines: "greedy",
-      beforeFirstChunk: (chunk: string) => {
-        // Find where the headers start by skipping any initial empty rows
-        const lines = chunk.split(/\r?\n/);
-        let headerLineIndex = 0;
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].trim();
-          // A row is considered empty if it contains only quotes, commas, semicolons, tabs, and whitespace
-          const cleanedLine = line.replace(/["',;\s\t]/g, "");
-          const isEmpty = cleanedLine === "";
-          if (!isEmpty) {
-            headerLineIndex = i;
-            break;
-          }
-        }
-        return lines.slice(headerLineIndex).join("\n");
-      },
       error: (error: any) => {
         reject(new Error(`Failed to load or parse CSV: ${error.message || error}`));
       },
       complete: (results: any) => {
-        const { data, meta } = results;
-        if (!data || data.length === 0) {
+        const rawRows: any[][] = results.data;
+        if (!rawRows || rawRows.length === 0) {
           reject(new Error("No data found in the provided CSV sheet. Verify it is published to the web."));
           return;
         }
 
-        const headers = meta.fields || Object.keys(data[0] || {});
-        
-        // Find best column indexes or keys utilizing fuzzy matching
-        const keyMap: { [key in keyof HardwareRecord]?: string } = {};
-
-        headers.forEach((originalHeader: string) => {
-          const rawTrimmed = originalHeader.trim();
-          const norm = normalizeHeader(originalHeader);
-          
-          if (rawTrimmed === "model_name" || norm.includes("modelname") || norm === "model" || norm === "device" || norm === "laptop") {
-            keyMap.modelName = originalHeader;
-          } else if (rawTrimmed === "ram" || norm === "ram" || norm === "memory" || norm.includes("ramsize")) {
-            keyMap.ram = originalHeader;
-          } else if (rawTrimmed === "storage" || norm.includes("storage") || norm === "ssd" || norm === "hdd" || norm.includes("drive")) {
-            keyMap.storage = originalHeader;
-          } else if (rawTrimmed === "historical_avg_price" || norm.includes("historicalavgprice") || norm.includes("historicalavgsellingprice") || norm.includes("historicalprice") || norm === "price") {
-            keyMap.historicalPrice = originalHeader;
-          } else if (rawTrimmed === "units_sold_30d" || norm.includes("unitssold30d") || norm.includes("unitssold30days") || norm.includes("unitssoldinlast30days") || norm.includes("sold30") || norm.includes("velocity")) {
-            keyMap.unitsSold30Days = originalHeader;
-          } else if (rawTrimmed === "total_i5_variants" || norm.includes("totali5variants") || norm.includes("i5variants")) {
-            keyMap.totalI5Variants = originalHeader;
-          } else if (rawTrimmed === "total_i7_variants" || norm.includes("totali7variants") || norm.includes("i7variants")) {
-            keyMap.totalI7Variants = originalHeader;
-          } else if (rawTrimmed === "currently_in_stock" || norm.includes("currentlyinstock") || norm.includes("instock")) {
-            keyMap.currentlyInStock = originalHeader;
-          } else if (rawTrimmed === "stock_i5" || norm.includes("stocki5")) {
-            keyMap.stockI5 = originalHeader;
-          } else if (rawTrimmed === "stock_i7" || norm.includes("stocki7")) {
-            keyMap.stockI7 = originalHeader;
-          } else if (rawTrimmed === "already_here" || norm.includes("alreadyhere")) {
-            keyMap.alreadyHere = originalHeader;
+        // Find the index of the header row (contains model_name, model, or ram)
+        let headerRowIndex = -1;
+        for (let i = 0; i < rawRows.length; i++) {
+          const row = rawRows[i];
+          if (Array.isArray(row)) {
+            const hasHeader = row.some(cell => {
+              const norm = normalizeHeader(String(cell || ""));
+              return norm === "modelname" || norm === "model" || norm === "ram";
+            });
+            if (hasHeader) {
+              headerRowIndex = i;
+              break;
+            }
           }
-        });
+        }
 
-        // Let's check required key maps. If they didn't match fuzzy, let us map via keyword contains or fall back to positional indices
-        const finalModelKey = keyMap.modelName || headers.find((h: string) => normalizeHeader(h).includes("model")) || headers[0];
-        const finalRamKey = keyMap.ram || headers.find((h: string) => normalizeHeader(h).includes("ram")) || headers[1];
-        const finalStorageKey = keyMap.storage || headers.find((h: string) => normalizeHeader(h).includes("storage")) || headers[2];
-        const finalPriceKey = keyMap.historicalPrice || headers.find((h: string) => normalizeHeader(h).includes("price") || normalizeHeader(h).includes("selling")) || headers[3];
-        const finalUnitsKey = keyMap.unitsSold30Days || headers.find((h: string) => normalizeHeader(h).includes("sold") || normalizeHeader(h).includes("units")) || headers[4];
-
-        // Locate new keys if present
-        const finalTotalI5Key = keyMap.totalI5Variants || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("totali5") || n.includes("total_i5"); });
-        const finalTotalI7Key = keyMap.totalI7Variants || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("totali7") || n.includes("total_i7"); });
-        const finalInStockKey = keyMap.currentlyInStock || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("currentlyinstock") || n.includes("currently_in_stock") || n.includes("instock"); });
-        const finalStockI5Key = keyMap.stockI5 || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("stocki5") || n.includes("stock_i5"); });
-        const finalStockI7Key = keyMap.stockI7 || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("stocki7") || n.includes("stock_i7"); });
-        const finalAlreadyHereKey = keyMap.alreadyHere || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("alreadyhere") || n.includes("already_here"); });
-
-        if (!finalModelKey || !finalRamKey || !finalStorageKey || !finalPriceKey || !finalUnitsKey) {
-          reject(new Error("Unable to identify required sheet columns. Please ensure they contain Model Name, RAM, Storage, Historical Price, and 30-day sales."));
+        if (headerRowIndex === -1) {
+          reject(new Error("Unable to identify the header row in the CSV. Please ensure it contains 'model_name' or 'model'."));
           return;
         }
 
+        const headers = rawRows[headerRowIndex].map(h => String(h || "").trim());
+        const dataRows = rawRows.slice(headerRowIndex + 1);
+
+        // Find best column indexes utilizing fuzzy matching
+        const keyMap: { [key in keyof HardwareRecord]?: number } = {};
+
+        headers.forEach((header: string, index: number) => {
+          const norm = normalizeHeader(header);
+          
+          if (header === "model_name" || norm.includes("modelname") || norm === "model" || norm === "device" || norm === "laptop") {
+            keyMap.modelName = index;
+          } else if (header === "ram" || norm === "ram" || norm === "memory" || norm.includes("ramsize")) {
+            keyMap.ram = index;
+          } else if (header === "storage" || norm.includes("storage") || norm === "ssd" || norm === "hdd" || norm.includes("drive")) {
+            keyMap.storage = index;
+          } else if (header === "historical_avg_price" || norm.includes("historicalavgprice") || norm.includes("historicalavgsellingprice") || norm.includes("historicalprice") || norm === "price") {
+            keyMap.historicalPrice = index;
+          } else if (header === "units_sold_30d" || norm.includes("unitssold30d") || norm.includes("unitssold30days") || norm.includes("unitssoldinlast30days") || norm.includes("sold30") || norm.includes("velocity")) {
+            keyMap.unitsSold30Days = index;
+          } else if (header === "total_i5_variants" || norm.includes("totali5variants") || norm.includes("i5variants")) {
+            keyMap.totalI5Variants = index;
+          } else if (header === "total_i7_variants" || norm.includes("totali7variants") || norm.includes("i7variants")) {
+            keyMap.totalI7Variants = index;
+          } else if (header === "currently_in_stock" || norm.includes("currentlyinstock") || norm.includes("instock")) {
+            keyMap.currentlyInStock = index;
+          } else if (header === "stock_i5" || norm.includes("stocki5")) {
+            keyMap.stockI5 = index;
+          } else if (header === "stock_i7" || norm.includes("stocki7")) {
+            keyMap.stockI7 = index;
+          } else if (header === "already_here" || norm.includes("alreadyhere")) {
+            keyMap.alreadyHere = index;
+          }
+        });
+
+        // Let's check required key maps. If they didn't match fuzzy, let us map via positional indices or search
+        const finalModelIdx = keyMap.modelName !== undefined ? keyMap.modelName : headers.findIndex((h: string) => normalizeHeader(h).includes("model"));
+        const finalRamIdx = keyMap.ram !== undefined ? keyMap.ram : headers.findIndex((h: string) => normalizeHeader(h).includes("ram"));
+        const finalStorageIdx = keyMap.storage !== undefined ? keyMap.storage : headers.findIndex((h: string) => normalizeHeader(h).includes("storage"));
+        const finalPriceIdx = keyMap.historicalPrice !== undefined ? keyMap.historicalPrice : headers.findIndex((h: string) => normalizeHeader(h).includes("price") || normalizeHeader(h).includes("selling"));
+        const finalUnitsIdx = keyMap.unitsSold30Days !== undefined ? keyMap.unitsSold30Days : headers.findIndex((h: string) => normalizeHeader(h).includes("sold") || normalizeHeader(h).includes("units"));
+
+        if (finalModelIdx === -1 || finalRamIdx === -1 || finalStorageIdx === -1 || finalPriceIdx === -1 || finalUnitsIdx === -1) {
+          const foundHeaders = headers.map(h => `"${h}"`).join(", ");
+          reject(new Error(`Unable to identify required sheet columns. Found headers: [${foundHeaders}]. Please ensure they contain model_name, ram, storage, historical_avg_price, and units_sold_30d.`));
+          return;
+        }
+
+        // Helper to find index of new fields
+        const getNewFieldIdx = (keyMapVal?: number, searchTerms: string[] = []) => {
+          if (keyMapVal !== undefined) return keyMapVal;
+          return headers.findIndex((h: string) => {
+            const n = normalizeHeader(h);
+            return searchTerms.some(term => n.includes(term));
+          });
+        };
+
+        const finalTotalI5Idx = getNewFieldIdx(keyMap.totalI5Variants, ["totali5", "total_i5"]);
+        const finalTotalI7Idx = getNewFieldIdx(keyMap.totalI7Variants, ["totali7", "total_i7"]);
+        const finalInStockIdx = getNewFieldIdx(keyMap.currentlyInStock, ["currentlyinstock", "currently_in_stock", "instock"]);
+        const finalStockI5Idx = getNewFieldIdx(keyMap.stockI5, ["stocki5", "stock_i5"]);
+        const finalStockI7Idx = getNewFieldIdx(keyMap.stockI7, ["stocki7", "stock_i7"]);
+        const finalAlreadyHereIdx = getNewFieldIdx(keyMap.alreadyHere, ["alreadyhere", "already_here"]);
+
         try {
-          const records: HardwareRecord[] = data.map((row: any, index: number) => {
-            const rawModel = String(row[finalModelKey] || "").trim();
-            const rawRam = String(row[finalRamKey] || "").trim();
-            const rawStorage = String(row[finalStorageKey] || "").trim();
+          const records: HardwareRecord[] = dataRows.map((row: any, rowIndex: number) => {
+            if (!Array.isArray(row)) return null;
+
+            const rawModel = String(row[finalModelIdx] || "").trim();
+            const rawRam = String(row[finalRamIdx] || "").trim();
+            const rawStorage = String(row[finalStorageIdx] || "").trim();
             
             // Clean pricing and remove dollar signs, commas, or spaces
-            const rawPriceStr = String(row[finalPriceKey] || "").replace(/[\$,\s]/g, "");
-            const rawUnitsStr = String(row[finalUnitsKey] || "").replace(/[^0-9]/g, "");
+            const rawPriceStr = String(row[finalPriceIdx] || "").replace(/[\$,\s]/g, "");
+            const rawUnitsStr = String(row[finalUnitsIdx] || "").replace(/[^0-9]/g, "");
 
             // Clean custom fields and remove any non-digit characters
-            const rawTotalI5 = finalTotalI5Key ? String(row[finalTotalI5Key] || "").replace(/[^0-9]/g, "") : "";
-            const rawTotalI7 = finalTotalI7Key ? String(row[finalTotalI7Key] || "").replace(/[^0-9]/g, "") : "";
-            const rawInStock = finalInStockKey ? String(row[finalInStockKey] || "").replace(/[^0-9]/g, "") : "";
-            const rawStockI5 = finalStockI5Key ? String(row[finalStockI5Key] || "").replace(/[^0-9]/g, "") : "";
-            const rawStockI7 = finalStockI7Key ? String(row[finalStockI7Key] || "").replace(/[^0-9]/g, "") : "";
-            const rawAlreadyHere = finalAlreadyHereKey ? String(row[finalAlreadyHereKey] || "").replace(/[^0-9]/g, "") : "";
+            const rawTotalI5 = finalTotalI5Idx !== -1 ? String(row[finalTotalI5Idx] || "").replace(/[^0-9]/g, "") : "";
+            const rawTotalI7 = finalTotalI7Idx !== -1 ? String(row[finalTotalI7Idx] || "").replace(/[^0-9]/g, "") : "";
+            const rawInStock = finalInStockIdx !== -1 ? String(row[finalInStockIdx] || "").replace(/[^0-9]/g, "") : "";
+            const rawStockI5 = finalStockI5Idx !== -1 ? String(row[finalStockI5Idx] || "").replace(/[^0-9]/g, "") : "";
+            const rawStockI7 = finalStockI7Idx !== -1 ? String(row[finalStockI7Idx] || "").replace(/[^0-9]/g, "") : "";
+            const rawAlreadyHere = finalAlreadyHereIdx !== -1 ? String(row[finalAlreadyHereIdx] || "").replace(/[^0-9]/g, "") : "";
+
+            const historicalPrice = parseFloat(rawPriceStr);
+            const unitsSold30Days = parseInt(rawUnitsStr, 10);
 
             const totalI5Variants = parseInt(rawTotalI5, 10);
             const totalI7Variants = parseInt(rawTotalI7, 10);
@@ -177,10 +196,6 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
             if (!rawModel) {
               // Ignore rows starting with blank model name
               return null;
-            }
-
-            if (isNaN(historicalPrice) || isNaN(unitsSold30Days)) {
-              console.warn(`Row ${index + 1} has invalid numerical data: price='${row[finalPriceKey]}', units='${row[finalUnitsKey]}'`);
             }
 
             return {
