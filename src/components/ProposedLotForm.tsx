@@ -416,11 +416,14 @@ export function ProposedLotForm({
 
           {/* Match statistics card for reference directly under additions */}
           {matchedRecord && (
-            <div className="bg-[#161d28] border border-slate-800/80 rounded-lg p-3 text-[11px] flex flex-col gap-1.5">
-              <span className="font-bold text-indigo-400 font-mono tracking-wide uppercase text-[10px] flex items-center gap-1">
-                <Sparkles size={11} /> Historical Benchmark Reference
-              </span>
-              <div className="grid grid-cols-2 gap-2 text-slate-300">
+            <div className="bg-[#161d28] border border-slate-800/80 rounded-lg p-3.5 text-[11px] flex flex-col gap-2.5">
+              <div className="flex items-center justify-between border-b border-slate-800/60 pb-1.5">
+                <span className="font-bold text-indigo-400 font-mono tracking-wide uppercase text-[10px] flex items-center gap-1">
+                  <Sparkles size={11} /> Historical Benchmark Reference
+                </span>
+                <span className="text-[9px] text-slate-500 font-mono">SPEC INFO</span>
+              </div>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-slate-300">
                 <div>
                   <span className="text-slate-400">Avg Resale Price: </span>
                   <span className="font-bold text-white">${matchedRecord.historicalPrice}</span>
@@ -428,6 +431,37 @@ export function ProposedLotForm({
                 <div>
                   <span className="text-slate-400">30D Velocity: </span>
                   <span className="font-bold text-white">{matchedRecord.unitsSold30Days} u</span>
+                </div>
+                
+                <div className="col-span-2 border-t border-slate-850 my-1 pt-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                  Live Stock & Variant Data
+                </div>
+                
+                <div>
+                  <span className="text-slate-400">Currently in Stock: </span>
+                  <span className="font-bold text-emerald-400">{matchedRecord.currentlyInStock ?? 0} u</span>
+                </div>
+                <div>
+                  <span className="text-slate-400">Already Here: </span>
+                  <span className="font-bold text-indigo-400">{matchedRecord.alreadyHere ?? 0} u</span>
+                </div>
+                
+                <div>
+                  <span className="text-slate-400">Total i5 Variants: </span>
+                  <span className="font-bold text-white">{matchedRecord.totalI5Variants ?? 0}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400">Total i7 Variants: </span>
+                  <span className="font-bold text-white">{matchedRecord.totalI7Variants ?? 0}</span>
+                </div>
+                
+                <div>
+                  <span className="text-slate-400">Stock i5: </span>
+                  <span className="font-bold text-white">{matchedRecord.stockI5 ?? 0} u</span>
+                </div>
+                <div>
+                  <span className="text-slate-400">Stock i7: </span>
+                  <span className="font-bold text-white">{matchedRecord.stockI7 ?? 0} u</span>
                 </div>
               </div>
             </div>

@@ -4,6 +4,12 @@ export interface HardwareRecord {
   storage: string;
   historicalPrice: number;
   unitsSold30Days: number;
+  totalI5Variants?: number;
+  totalI7Variants?: number;
+  currentlyInStock?: number;
+  stockI5?: number;
+  stockI7?: number;
+  alreadyHere?: number;
 }
 
 export interface ProposedLineItem {

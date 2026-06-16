@@ -5,32 +5,32 @@ import { HardwareRecord } from "./types";
 // This allows the application to work out-of-the-box in a highly functional state before custom sheets are linked.
 export const DEFAULT_HARDWARE_RECORDS: HardwareRecord[] = [
   // ThinkPad T14 Gen 2
-  { modelName: "ThinkPad T14 Gen 2", ram: "8GB", storage: "256GB SSD", historicalPrice: 320, unitsSold30Days: 190 },
-  { modelName: "ThinkPad T14 Gen 2", ram: "16GB", storage: "512GB SSD", historicalPrice: 450, unitsSold30Days: 140 },
-  { modelName: "ThinkPad T14 Gen 2", ram: "32GB", storage: "1TB SSD", historicalPrice: 580, unitsSold30Days: 85 },
+  { modelName: "ThinkPad T14 Gen 2", ram: "8GB", storage: "256GB SSD", historicalPrice: 320, unitsSold30Days: 190, totalI5Variants: 3, totalI7Variants: 2, currentlyInStock: 24, stockI5: 14, stockI7: 10, alreadyHere: 5 },
+  { modelName: "ThinkPad T14 Gen 2", ram: "16GB", storage: "512GB SSD", historicalPrice: 450, unitsSold30Days: 140, totalI5Variants: 2, totalI7Variants: 3, currentlyInStock: 18, stockI5: 8, stockI7: 10, alreadyHere: 2 },
+  { modelName: "ThinkPad T14 Gen 2", ram: "32GB", storage: "1TB SSD", historicalPrice: 580, unitsSold30Days: 85, totalI5Variants: 1, totalI7Variants: 4, currentlyInStock: 12, stockI5: 2, stockI7: 10, alreadyHere: 1 },
   
   // MacBook Pro M1 14"
-  { modelName: "MacBook Pro M1 14\"", ram: "8GB", storage: "256GB SSD", historicalPrice: 790, unitsSold30Days: 155 },
-  { modelName: "MacBook Pro M1 14\"", ram: "16GB", storage: "512GB SSD", historicalPrice: 950, unitsSold30Days: 110 },
-  { modelName: "MacBook Pro M1 14\"", ram: "32GB", storage: "1TB SSD", historicalPrice: 1250, unitsSold30Days: 45 },
+  { modelName: "MacBook Pro M1 14\"", ram: "8GB", storage: "256GB SSD", historicalPrice: 790, unitsSold30Days: 155, totalI5Variants: 0, totalI7Variants: 0, currentlyInStock: 8, stockI5: 0, stockI7: 0, alreadyHere: 3 },
+  { modelName: "MacBook Pro M1 14\"", ram: "16GB", storage: "512GB SSD", historicalPrice: 950, unitsSold30Days: 110, totalI5Variants: 0, totalI7Variants: 0, currentlyInStock: 15, stockI5: 0, stockI7: 0, alreadyHere: 4 },
+  { modelName: "MacBook Pro M1 14\"", ram: "32GB", storage: "1TB SSD", historicalPrice: 1250, unitsSold30Days: 45, totalI5Variants: 0, totalI7Variants: 0, currentlyInStock: 5, stockI5: 0, stockI7: 0, alreadyHere: 1 },
   
   // Dell Latitude 7420
-  { modelName: "Dell Latitude 7420", ram: "8GB", storage: "256GB SSD", historicalPrice: 290, unitsSold30Days: 210 },
-  { modelName: "Dell Latitude 7420", ram: "16GB", storage: "256GB SSD", historicalPrice: 380, unitsSold30Days: 160 },
-  { modelName: "Dell Latitude 7420", ram: "16GB", storage: "512GB SSD", historicalPrice: 420, unitsSold30Days: 120 },
+  { modelName: "Dell Latitude 7420", ram: "8GB", storage: "256GB SSD", historicalPrice: 290, unitsSold30Days: 210, totalI5Variants: 4, totalI7Variants: 2, currentlyInStock: 30, stockI5: 20, stockI7: 10, alreadyHere: 8 },
+  { modelName: "Dell Latitude 7420", ram: "16GB", storage: "256GB SSD", historicalPrice: 380, unitsSold30Days: 160, totalI5Variants: 3, totalI7Variants: 3, currentlyInStock: 22, stockI5: 12, stockI7: 10, alreadyHere: 6 },
+  { modelName: "Dell Latitude 7420", ram: "16GB", storage: "512GB SSD", historicalPrice: 420, unitsSold30Days: 120, totalI5Variants: 2, totalI7Variants: 4, currentlyInStock: 16, stockI5: 6, stockI7: 10, alreadyHere: 4 },
   
   // HP EliteBook 840 G8
-  { modelName: "HP EliteBook 840 G8", ram: "8GB", storage: "256GB SSD", historicalPrice: 310, unitsSold30Days: 145 },
-  { modelName: "HP EliteBook 840 G8", ram: "16GB", storage: "512GB SSD", historicalPrice: 410, unitsSold30Days: 115 },
-  { modelName: "HP EliteBook 840 G8", ram: "32GB", storage: "1TB SSD", historicalPrice: 620, unitsSold30Days: 50 },
+  { modelName: "HP EliteBook 840 G8", ram: "8GB", storage: "256GB SSD", historicalPrice: 310, unitsSold30Days: 145, totalI5Variants: 3, totalI7Variants: 1, currentlyInStock: 19, stockI5: 14, stockI7: 5, alreadyHere: 3 },
+  { modelName: "HP EliteBook 840 G8", ram: "16GB", storage: "512GB SSD", historicalPrice: 410, unitsSold30Days: 115, totalI5Variants: 2, totalI7Variants: 2, currentlyInStock: 14, stockI5: 8, stockI7: 6, alreadyHere: 2 },
+  { modelName: "HP EliteBook 840 G8", ram: "32GB", storage: "1TB SSD", historicalPrice: 620, unitsSold30Days: 50, totalI5Variants: 1, totalI7Variants: 3, currentlyInStock: 8, stockI5: 2, stockI7: 6, alreadyHere: 1 },
 
   // HP ProBook 445 G8
-  { modelName: "HP ProBook 445 G8", ram: "8GB", storage: "256GB SSD", historicalPrice: 270, unitsSold30Days: 130 },
-  { modelName: "HP ProBook 445 G8", ram: "16GB", storage: "512GB SSD", historicalPrice: 390, unitsSold30Days: 95 },
+  { modelName: "HP ProBook 445 G8", ram: "8GB", storage: "256GB SSD", historicalPrice: 270, unitsSold30Days: 130, totalI5Variants: 4, totalI7Variants: 1, currentlyInStock: 22, stockI5: 18, stockI7: 4, alreadyHere: 5 },
+  { modelName: "HP ProBook 445 G8", ram: "16GB", storage: "512GB SSD", historicalPrice: 390, unitsSold30Days: 95, totalI5Variants: 3, totalI7Variants: 2, currentlyInStock: 15, stockI5: 10, stockI7: 5, alreadyHere: 3 },
 
   // iPad Pro 11" M1
-  { modelName: "iPad Pro 11\" M1", ram: "8GB", storage: "128GB SSD", historicalPrice: 590, unitsSold30Days: 180 },
-  { modelName: "iPad Pro 11\" M1", ram: "16GB", storage: "512GB SSD", historicalPrice: 780, unitsSold30Days: 60 }
+  { modelName: "iPad Pro 11\" M1", ram: "8GB", storage: "128GB SSD", historicalPrice: 590, unitsSold30Days: 180, totalI5Variants: 0, totalI7Variants: 0, currentlyInStock: 11, stockI5: 0, stockI7: 0, alreadyHere: 4 },
+  { modelName: "iPad Pro 11\" M1", ram: "16GB", storage: "512GB SSD", historicalPrice: 780, unitsSold30Days: 60, totalI5Variants: 0, totalI7Variants: 0, currentlyInStock: 6, stockI5: 0, stockI7: 0, alreadyHere: 2 }
 ];
 
 // Re-usable public Google Sheets URL placeholder to guide the user in setting up their sheet.
@@ -64,13 +64,33 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
     }
   }
 
+  // Fetch the CSV as text, clean empty lines before the header row, and parse
+  const response = await fetch(parsedUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Google Sheet CSV: HTTP status ${response.status}`);
+  }
+  const csvText = await response.text();
+
+  // Find where the headers start by skipping any initial empty rows
+  const lines = csvText.split(/\r?\n/);
+  let headerLineIndex = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    // A row is considered empty if it contains only whitespace or delimiters
+    const isEmpty = line === "" || /^[,;\s\t]+$/.test(line);
+    if (!isEmpty) {
+      headerLineIndex = i;
+      break;
+    }
+  }
+  const cleanedCsvText = lines.slice(headerLineIndex).join("\n");
+
   return new Promise((resolve, reject) => {
-    Papa.parse(parsedUrl, {
-      download: true,
+    Papa.parse(cleanedCsvText, {
       header: true,
       skipEmptyLines: "greedy",
       error: (error: any) => {
-        reject(new Error(`Failed to load or parse CSV: ${error.message || error}`));
+        reject(new Error(`Failed to parse CSV: ${error.message || error}`));
       },
       complete: (results: any) => {
         const { data, meta } = results;
@@ -93,10 +113,22 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
             keyMap.ram = originalHeader;
           } else if (norm.includes("storage") || norm === "ssd" || norm === "hdd" || norm.includes("drive")) {
             keyMap.storage = originalHeader;
-          } else if (norm.includes("historicalavgsellingprice") || norm.includes("avgsellingprice") || norm.includes("sellingprice") || norm.includes("historicalprice") || norm === "price") {
+          } else if (norm.includes("historicalavgsellingprice") || norm.includes("historicalavgprice") || norm.includes("avgsellingprice") || norm.includes("sellingprice") || norm.includes("historicalprice") || norm === "price") {
             keyMap.historicalPrice = originalHeader;
-          } else if (norm.includes("unitssoldinlast30days") || norm.includes("unitssold30days") || norm.includes("soldinlast30days") || norm.includes("sold30") || norm.includes("sold30days") || norm.includes("velocity")) {
+          } else if (norm.includes("unitssoldinlast30days") || norm.includes("unitssold30days") || norm.includes("unitssold30d") || norm.includes("soldinlast30days") || norm.includes("sold30") || norm.includes("sold30days") || norm.includes("velocity")) {
             keyMap.unitsSold30Days = originalHeader;
+          } else if (norm.includes("totali5variants") || norm.includes("total_i5_variants") || norm.includes("i5variants")) {
+            keyMap.totalI5Variants = originalHeader;
+          } else if (norm.includes("totali7variants") || norm.includes("total_i7_variants") || norm.includes("i7variants")) {
+            keyMap.totalI7Variants = originalHeader;
+          } else if (norm.includes("currentlyinstock") || norm.includes("currently_in_stock") || norm.includes("instock")) {
+            keyMap.currentlyInStock = originalHeader;
+          } else if (norm.includes("stocki5") || norm.includes("stock_i5")) {
+            keyMap.stockI5 = originalHeader;
+          } else if (norm.includes("stocki7") || norm.includes("stock_i7")) {
+            keyMap.stockI7 = originalHeader;
+          } else if (norm.includes("alreadyhere") || norm.includes("already_here")) {
+            keyMap.alreadyHere = originalHeader;
           }
         });
 
@@ -106,6 +138,14 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
         const finalStorageKey = keyMap.storage || headers.find((h: string) => normalizeHeader(h).includes("storage")) || headers[2];
         const finalPriceKey = keyMap.historicalPrice || headers.find((h: string) => normalizeHeader(h).includes("price") || normalizeHeader(h).includes("selling")) || headers[3];
         const finalUnitsKey = keyMap.unitsSold30Days || headers.find((h: string) => normalizeHeader(h).includes("sold") || normalizeHeader(h).includes("units")) || headers[4];
+
+        // Locate new keys if present
+        const finalTotalI5Key = keyMap.totalI5Variants || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("totali5") || n.includes("total_i5"); });
+        const finalTotalI7Key = keyMap.totalI7Variants || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("totali7") || n.includes("total_i7"); });
+        const finalInStockKey = keyMap.currentlyInStock || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("currentlyinstock") || n.includes("currently_in_stock") || n.includes("instock"); });
+        const finalStockI5Key = keyMap.stockI5 || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("stocki5") || n.includes("stock_i5"); });
+        const finalStockI7Key = keyMap.stockI7 || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("stocki7") || n.includes("stock_i7"); });
+        const finalAlreadyHereKey = keyMap.alreadyHere || headers.find((h: string) => { const n = normalizeHeader(h); return n.includes("alreadyhere") || n.includes("already_here"); });
 
         if (!finalModelKey || !finalRamKey || !finalStorageKey || !finalPriceKey || !finalUnitsKey) {
           reject(new Error("Unable to identify required sheet columns. Please ensure they contain Model Name, RAM, Storage, Historical Price, and 30-day sales."));
@@ -122,8 +162,20 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
             const rawPriceStr = String(row[finalPriceKey] || "").replace(/[\$,\s]/g, "");
             const rawUnitsStr = String(row[finalUnitsKey] || "").replace(/[^0-9]/g, "");
 
-            const historicalPrice = parseFloat(rawPriceStr);
-            const unitsSold30Days = parseInt(rawUnitsStr, 10);
+            // Clean custom fields and remove any non-digit characters
+            const rawTotalI5 = finalTotalI5Key ? String(row[finalTotalI5Key] || "").replace(/[^0-9]/g, "") : "";
+            const rawTotalI7 = finalTotalI7Key ? String(row[finalTotalI7Key] || "").replace(/[^0-9]/g, "") : "";
+            const rawInStock = finalInStockKey ? String(row[finalInStockKey] || "").replace(/[^0-9]/g, "") : "";
+            const rawStockI5 = finalStockI5Key ? String(row[finalStockI5Key] || "").replace(/[^0-9]/g, "") : "";
+            const rawStockI7 = finalStockI7Key ? String(row[finalStockI7Key] || "").replace(/[^0-9]/g, "") : "";
+            const rawAlreadyHere = finalAlreadyHereKey ? String(row[finalAlreadyHereKey] || "").replace(/[^0-9]/g, "") : "";
+
+            const totalI5Variants = parseInt(rawTotalI5, 10);
+            const totalI7Variants = parseInt(rawTotalI7, 10);
+            const currentlyInStock = parseInt(rawInStock, 10);
+            const stockI5 = parseInt(rawStockI5, 10);
+            const stockI7 = parseInt(rawStockI7, 10);
+            const alreadyHere = parseInt(rawAlreadyHere, 10);
 
             if (!rawModel) {
               // Ignore rows starting with blank model name
@@ -139,7 +191,13 @@ export async function fetchGoogleSheetRecords(url: string): Promise<HardwareReco
               ram: rawRam || "N/A",
               storage: rawStorage || "N/A",
               historicalPrice: isNaN(historicalPrice) ? 0 : historicalPrice,
-              unitsSold30Days: isNaN(unitsSold30Days) ? 0 : unitsSold30Days
+              unitsSold30Days: isNaN(unitsSold30Days) ? 0 : unitsSold30Days,
+              totalI5Variants: isNaN(totalI5Variants) ? 0 : totalI5Variants,
+              totalI7Variants: isNaN(totalI7Variants) ? 0 : totalI7Variants,
+              currentlyInStock: isNaN(currentlyInStock) ? 0 : currentlyInStock,
+              stockI5: isNaN(stockI5) ? 0 : stockI5,
+              stockI7: isNaN(stockI7) ? 0 : stockI7,
+              alreadyHere: isNaN(alreadyHere) ? 0 : alreadyHere
             };
           }).filter((r: any): r is HardwareRecord => r !== null);
 
